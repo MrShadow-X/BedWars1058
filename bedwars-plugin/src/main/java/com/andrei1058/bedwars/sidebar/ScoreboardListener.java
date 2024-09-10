@@ -22,7 +22,6 @@ package com.andrei1058.bedwars.sidebar;
 
 import com.andrei1058.bedwars.BedWars;
 import com.andrei1058.bedwars.api.arena.IArena;
-import com.andrei1058.bedwars.api.events.player.*;
 import com.andrei1058.bedwars.api.server.ServerType;
 import com.andrei1058.bedwars.arena.Arena;
 import org.bukkit.entity.Player;

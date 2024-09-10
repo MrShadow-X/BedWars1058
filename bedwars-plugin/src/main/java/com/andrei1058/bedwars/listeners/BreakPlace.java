@@ -59,11 +59,15 @@ import org.bukkit.event.entity.ItemSpawnEvent;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerBucketFillEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import static com.andrei1058.bedwars.BedWars.*;
 import static com.andrei1058.bedwars.api.language.Language.getMsg;
@@ -168,6 +172,10 @@ public class BreakPlace implements Listener {
             a.addPlacedBlock(e.getBlock());
             if (e.getBlock().getType() == Material.TNT) {
                 if (config.getBoolean(ConfigPath.GENERAL_TNT_AUTO_IGNITE)) {
+
+                    // Add cooldown for Dream Defender (Iron Golem)
+                    p.setCooldown(e.getBlock().getType(), BedWars.config.getYml().getInt(ConfigPath.GENERAL_CONFIGURATION_TNT_COOLDOWN) * 20);
+
                     e.getBlockPlaced().setType(Material.AIR);
                     TNTPrimed tnt = Objects.requireNonNull(e.getBlock().getLocation().getWorld()).spawn(e.getBlock().getLocation().add(0.5, 0, 0.5), TNTPrimed.class);
                     tnt.setFuseTicks(config.getInt(ConfigPath.GENERAL_TNT_FUSE_TICKS));
@@ -176,6 +184,9 @@ public class BreakPlace implements Listener {
                 }
             } else if (BedWars.shop.getBoolean(ConfigPath.SHOP_SPECIAL_TOWER_ENABLE)) {
                 if (e.getBlock().getType() == Material.valueOf(shop.getString(ConfigPath.SHOP_SPECIAL_TOWER_MATERIAL))) {
+
+                    // Add cooldown for Pop-Up Tower (Chest)
+                    p.setCooldown(e.getBlock().getType(), BedWars.config.getYml().getInt(ConfigPath.GENERAL_CONFIGURATION_TOWER_COOLDOWN) * 20);
 
                     e.setCancelled(true);
                     Location loc = e.getBlock().getLocation();
@@ -439,6 +450,18 @@ public class BreakPlace implements Listener {
         }
     }
 
+    private final ConcurrentMap<Player, Boolean> bucketEmpty = new ConcurrentHashMap<>();
+
+    // prevent dropping bucket before removing it from inventory
+    @EventHandler
+    public void onDrop(PlayerDropItemEvent e) {
+        if (bucketEmpty.getOrDefault(e.getPlayer(), false)) {
+            if (e.getItemDrop().getItemStack().getType().equals(Material.BUCKET)) {
+                e.setCancelled(true);
+            }
+        }
+    }
+
     @EventHandler
     public void onBucketEmpty(PlayerBucketEmptyEvent e) {
         if (e.isCancelled()) return;
@@ -474,6 +497,7 @@ public class BreakPlace implements Listener {
             }
             if (e.getBlockClicked().getLocation().getBlockY() >= a.getConfig().getInt(ConfigPath.ARENA_CONFIGURATION_MAX_BUILD_Y)) {
                 e.setCancelled(true);
+                p.sendMessage(getMsg(p, Messages.INTERACT_CANNOT_PLACE_BLOCK));
                 return;
             }
             try {
@@ -511,7 +535,12 @@ public class BreakPlace implements Listener {
             } catch (Exception ignored) {
             }
             /* Remove empty bucket */
-            Bukkit.getScheduler().runTaskLater(plugin, () -> nms.minusAmount(e.getPlayer(), e.getItemStack(), 1), 3L);
+            bucketEmpty.put(e.getPlayer(), true);
+            // remove empty water bucket
+            Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+                nms.minusAmount(e.getPlayer(), e.getItemStack(), 1);
+                bucketEmpty.put(e.getPlayer(), false);
+            }, 2L);
         }
     }
 

@@ -98,6 +98,13 @@ public class MainConfig extends ConfigManager {
         yml.addDefault(ConfigPath.GENERAL_CONFIGURATION_BUNGEE_OPTION_SERVER_ID, "bw1");
         yml.addDefault(ConfigPath.GENERAL_CONFIGURATION_BUNGEE_OPTION_BWP_TIME_OUT, 5000);
 
+        yml.addDefault(ConfigPath.GENERAL_CONFIGURATION_FIREBALL_COOLDOWN, 1);
+        yml.addDefault(ConfigPath.GENERAL_CONFIGURATION_TNT_COOLDOWN, 1);
+        yml.addDefault(ConfigPath.GENERAL_CONFIGURATION_SILVERFISH_COOLDOWN, 3);
+        yml.addDefault(ConfigPath.GENERAL_CONFIGURATION_IRON_GOLEM_COOLDOWN, 5);
+        yml.addDefault(ConfigPath.GENERAL_CONFIGURATION_EGG_BRIDGE_COOLDOWN, 3);
+        yml.addDefault(ConfigPath.GENERAL_CONFIGURATION_TOWER_COOLDOWN, 10);
+
         yml.addDefault(ConfigPath.GENERAL_CONFIGURATION_HUNGER_WAITING, false);
         yml.addDefault(ConfigPath.GENERAL_CONFIGURATION_HUNGER_INGAME, false);
 
@@ -152,6 +159,11 @@ public class MainConfig extends ConfigManager {
         yml.addDefault(ConfigPath.GENERAL_CONFIGURATION_DISABLE_FURNACE, true);
         yml.addDefault(ConfigPath.GENERAL_CONFIGURATION_DISABLE_BREWING_STAND, true);
         yml.addDefault(ConfigPath.GENERAL_CONFIGURATION_DISABLE_ANVIL, true);
+        yml.addDefault(ConfigPath.GENERAL_CONFIGURATION_DISABLE_TRAPDOOR, true);
+        yml.addDefault(ConfigPath.GENERAL_CONFIGURATION_DISABLE_NOTEBLOCK, true);
+        yml.addDefault(ConfigPath.GENERAL_CONFIGURATION_DISABLE_WOODEN_DOOR, true);
+        yml.addDefault(ConfigPath.GENERAL_CONFIGURATION_DISABLE_WOODEN_FENCE_GATE, true);
+
 
         /* Multi-Arena Lobby Command Items */
         saveLobbyCommandItem("stats", "bw stats", false, getForCurrentVersion("SKULL_ITEM", "SKULL_ITEM", "PLAYER_HEAD"), 3, 0);

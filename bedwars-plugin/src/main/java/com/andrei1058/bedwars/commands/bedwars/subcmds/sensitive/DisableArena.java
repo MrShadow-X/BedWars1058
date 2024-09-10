@@ -49,6 +49,8 @@ public class DisableArena extends SubCommand {
         setPermission(Permissions.PERMISSION_ARENA_DISABLE);
     }
 
+    //siemano elo
+
     @Override
     public boolean execute(String[] args, CommandSender s) {
         if (s instanceof ConsoleCommandSender) return false;

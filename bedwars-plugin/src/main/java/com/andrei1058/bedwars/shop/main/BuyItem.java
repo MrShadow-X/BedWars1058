@@ -247,7 +247,7 @@ public class BuyItem implements IBuyItem {
             }
         }
 
-        //Remove swords with lower damage
+        // Remove swords with lower damage
         if (BedWars.nms.isSword(i)) {
             for (ItemStack itm : player.getInventory().getContents()) {
                 if (itm == null) continue;

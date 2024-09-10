@@ -60,6 +60,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.text.DecimalFormat;
 import java.util.Map;
+import java.util.Objects;
 
 import static com.andrei1058.bedwars.BedWars.*;
 import static com.andrei1058.bedwars.api.language.Language.getMsg;
@@ -360,18 +361,21 @@ public class DamageDeathMove implements Listener {
             }
 
             BedWars.nms.clearArrowsFromPlayerBody(victim);
-            String message = victimsTeam.isBedDestroyed() ? Messages.PLAYER_DIE_UNKNOWN_REASON_FINAL_KILL : Messages.PLAYER_DIE_UNKNOWN_REASON_REGULAR;
+            String message = victimsTeam.isBedDestroyed() ? Messages.PLAYER_DIE_UNKNOWN_REASON_FINAL_KILL + " &8(" + Objects.requireNonNull(damageEvent).getCause().toString() + "&8)" : Messages.PLAYER_DIE_UNKNOWN_REASON_REGULAR  + " &8(" + Objects.requireNonNull(damageEvent).getCause().toString() + "&8)";
             PlayerKillEvent.PlayerKillCause cause = victimsTeam.isBedDestroyed() ? PlayerKillEvent.PlayerKillCause.UNKNOWN_FINAL_KILL : PlayerKillEvent.PlayerKillCause.UNKNOWN;
             if (damageEvent != null) {
+
+                // Get last attacker to check if player kill player or player made suicide
+                LastHit lh = getLastHit(victim);
+                if (lh != null) {
+                    if (lh.getTime() >= System.currentTimeMillis() - 15000) {
+                        if (lh.getDamager() instanceof Player) killer = (Player) lh.getDamager();
+                        if (killer != null && killer.getUniqueId().equals(victim.getUniqueId())) killer = null;
+                    }
+                }
+
                 // FLY_INTO_WALL returns when player is killed by arena_y_min_height
                 if (damageEvent.getCause().equals(EntityDamageEvent.DamageCause.valueOf("FLY_INTO_WALL"))) {
-                    LastHit lh = getLastHit(victim);
-                    if (lh != null) {
-                        if (lh.getTime() >= System.currentTimeMillis() - 15000) {
-                            if (lh.getDamager() instanceof Player) killer = (Player) lh.getDamager();
-                            if (killer != null && killer.getUniqueId().equals(victim.getUniqueId())) killer = null;
-                        }
-                    }
                     if (killer == null) {
                         message = victimsTeam.isBedDestroyed() ? Messages.PLAYER_DIE_VOID_FALL_FINAL_KILL : Messages.PLAYER_DIE_VOID_FALL_REGULAR_KILL;
                     } else {
@@ -383,14 +387,10 @@ public class DamageDeathMove implements Listener {
                     }
                     cause = victimsTeam.isBedDestroyed() ? PlayerKillEvent.PlayerKillCause.VOID_FINAL_KILL : PlayerKillEvent.PlayerKillCause.VOID;
                 }
+
+                // Explosions
                 if (damageEvent.getCause() == EntityDamageEvent.DamageCause.ENTITY_EXPLOSION) {
-                    LastHit lh = getLastHit(victim);
-                    if (lh != null) {
-                        if (lh.getTime() >= System.currentTimeMillis() - 15000) {
-                            if (lh.getDamager() instanceof Player) killer = (Player) lh.getDamager();
-                            if (killer != null && killer.getUniqueId().equals(victim.getUniqueId())) killer = null;
-                        }
-                    }
+
                     if (killer == null) {
                         message = victimsTeam.isBedDestroyed() ? Messages.PLAYER_DIE_EXPLOSION_WITHOUT_SOURCE_FINAL_KILL : Messages.PLAYER_DIE_EXPLOSION_WITHOUT_SOURCE_REGULAR;
                     } else {
@@ -402,14 +402,10 @@ public class DamageDeathMove implements Listener {
                     }
                     cause = victimsTeam.isBedDestroyed() ? PlayerKillEvent.PlayerKillCause.EXPLOSION_FINAL_KILL : PlayerKillEvent.PlayerKillCause.EXPLOSION;
 
-                } else if (damageEvent.getCause() == EntityDamageEvent.DamageCause.VOID) {
-                    LastHit lh = getLastHit(victim);
-                    if (lh != null) {
-                        if (lh.getTime() >= System.currentTimeMillis() - 15000) {
-                            if (lh.getDamager() instanceof Player) killer = (Player) lh.getDamager();
-                            if (killer != null && killer.getUniqueId().equals(victim.getUniqueId())) killer = null;
-                        }
-                    }
+                }
+
+                // Void
+                else if (damageEvent.getCause() == EntityDamageEvent.DamageCause.VOID) {
                     if (killer == null) {
                         message = victimsTeam.isBedDestroyed() ? Messages.PLAYER_DIE_VOID_FALL_FINAL_KILL : Messages.PLAYER_DIE_VOID_FALL_REGULAR_KILL;
                     } else {
@@ -420,13 +416,16 @@ public class DamageDeathMove implements Listener {
                         }
                     }
                     cause = victimsTeam.isBedDestroyed() ? PlayerKillEvent.PlayerKillCause.VOID_FINAL_KILL : PlayerKillEvent.PlayerKillCause.VOID;
-                } else if (damageEvent.getCause() == EntityDamageEvent.DamageCause.ENTITY_ATTACK) {
+                }
+
+                // Entity Attack
+                else if (damageEvent.getCause() == EntityDamageEvent.DamageCause.ENTITY_ATTACK) {
                     if (killer == null) {
-                        LastHit lh = getLastHit(victim);
-                        if (lh != null) {
-                            if (lh.getTime() >= System.currentTimeMillis() - 15000) {
-                                if (nms.isDespawnable(lh.getDamager())) {
-                                    Despawnable d = nms.getDespawnablesList().get(lh.getDamager().getUniqueId());
+                        LastHit lastHit = getLastHit(victim);
+                        if (lastHit != null) {
+                            if (lastHit.getTime() >= System.currentTimeMillis() - 15000) {
+                                if (nms.isDespawnable(lastHit.getDamager())) {
+                                    Despawnable d = nms.getDespawnablesList().get(lastHit.getDamager().getUniqueId());
                                     killersTeam = d.getTeam();
                                     message = d.getEntity().getType() == EntityType.IRON_GOLEM ? victimsTeam.isBedDestroyed() ? Messages.PLAYER_DIE_IRON_GOLEM_FINAL_KILL : Messages.PLAYER_DIE_IRON_GOLEM_REGULAR : victimsTeam.isBedDestroyed() ? Messages.PLAYER_DIE_DEBUG_FINAL_KILL : Messages.PLAYER_DIE_DEBUG_REGULAR;
                                     cause = victimsTeam.isBedDestroyed() ? d.getDeathFinalCause() : d.getDeathRegularCause();
@@ -437,29 +436,101 @@ public class DamageDeathMove implements Listener {
                         message = victimsTeam.isBedDestroyed() ? Messages.PLAYER_DIE_PVP_FINAL_KILL : Messages.PLAYER_DIE_PVP_REGULAR_KILL;
                         cause = victimsTeam.isBedDestroyed() ? PlayerKillEvent.PlayerKillCause.PVP_FINAL_KILL : PlayerKillEvent.PlayerKillCause.PVP;
                     }
-                } else if (damageEvent.getCause() == EntityDamageEvent.DamageCause.PROJECTILE) {
+                }
+
+                // Player Shooting Attack
+                else if (damageEvent.getCause() == EntityDamageEvent.DamageCause.PROJECTILE) {
                     if (killer != null) {
                         message = victimsTeam.isBedDestroyed() ? Messages.PLAYER_DIE_SHOOT_FINAL_KILL : Messages.PLAYER_DIE_SHOOT_REGULAR;
                         cause = victimsTeam.isBedDestroyed() ? PlayerKillEvent.PlayerKillCause.PLAYER_SHOOT_FINAL_KILL : PlayerKillEvent.PlayerKillCause.PLAYER_SHOOT;
                     }
-                } else if (damageEvent.getCause() == EntityDamageEvent.DamageCause.FALL) {
-                    LastHit lh = getLastHit(victim);
-                    if (lh != null) {
-                        // check if kicked off in the last 10 seconds
-                        if (lh.getTime() >= System.currentTimeMillis() - 10000) {
-                            if (lh.getDamager() instanceof Player) killer = (Player) lh.getDamager();
-                            if (killer != null && killer.getUniqueId().equals(victim.getUniqueId())) killer = null;
-                            if (killer != null) {
+                }
+
+                // Fall
+                else if (damageEvent.getCause() == EntityDamageEvent.DamageCause.FALL) {
+
+                            if (killer == null) {
+                                message = victimsTeam.isBedDestroyed() ? Messages.PLAYER_DIE_FALL_FINAL : Messages.PLAYER_DIE_FALL;
+                            } else {
                                 if (killer != victim) {
                                     message = victimsTeam.isBedDestroyed() ? Messages.PLAYER_DIE_KNOCKED_BY_FINAL_KILL : Messages.PLAYER_DIE_KNOCKED_BY_REGULAR_KILL;
                                 } else {
-                                    message = victimsTeam.isBedDestroyed() ? Messages.PLAYER_DIE_VOID_FALL_FINAL_KILL : Messages.PLAYER_DIE_VOID_FALL_REGULAR_KILL;
+                                    message = victimsTeam.isBedDestroyed() ? Messages.PLAYER_DIE_FALL_FINAL : Messages.PLAYER_DIE_FALL;
                                 }
                             }
                             cause = victimsTeam.isBedDestroyed() ? PlayerKillEvent.PlayerKillCause.PLAYER_PUSH_FINAL : PlayerKillEvent.PlayerKillCause.PLAYER_PUSH;
                         }
+
+                // Suffocation
+                else if (damageEvent.getCause() == EntityDamageEvent.DamageCause.SUFFOCATION) {
+                    if (killer == null) {
+                        message = victimsTeam.isBedDestroyed() ? Messages.PLAYER_DIE_SUFFOCATION_FINAL : Messages.PLAYER_DIE_SUFFOCATION;
+                    } else {
+                        if (killer != victim) {
+                            message = victimsTeam.isBedDestroyed() ? Messages.PLAYER_DIE_SUFFOCATION_SOURCE_FINAL : Messages.PLAYER_DIE_SUFFOCATION_SOURCE;
+                        } else {
+                            message = victimsTeam.isBedDestroyed() ? Messages.PLAYER_DIE_SUFFOCATION_FINAL : Messages.PLAYER_DIE_SUFFOCATION;
+                        }
                     }
+                    cause = victimsTeam.isBedDestroyed() ? PlayerKillEvent.PlayerKillCause.SUFFOCATION_FINAL : PlayerKillEvent.PlayerKillCause.SUFFOCATION;
                 }
+
+                // Drowning
+                else if (damageEvent.getCause() == EntityDamageEvent.DamageCause.DROWNING) {
+                    if (killer == null) {
+                        message = victimsTeam.isBedDestroyed() ? Messages.PLAYER_DIE_DROWNING_FINAL : Messages.PLAYER_DIE_DROWNING;
+                    } else {
+                        if (killer != victim) {
+                            message = victimsTeam.isBedDestroyed() ? Messages.PLAYER_DIE_DROWNING_SOURCE_FINAL : Messages.PLAYER_DIE_DROWNING_SOURCE;
+                        } else {
+                            message = victimsTeam.isBedDestroyed() ? Messages.PLAYER_DIE_DROWNING_FINAL : Messages.PLAYER_DIE_DROWNING;
+                        }
+                    }
+                    cause = victimsTeam.isBedDestroyed() ? PlayerKillEvent.PlayerKillCause.DROWNING_FINAL : PlayerKillEvent.PlayerKillCause.DROWNING;
+                }
+
+                // Contact (Cactus)
+                else if (damageEvent.getCause() == EntityDamageEvent.DamageCause.CONTACT) {
+                    if (killer == null) {
+                        message = victimsTeam.isBedDestroyed() ? Messages.PLAYER_DIE_CACTUS_FINAL : Messages.PLAYER_DIE_CACTUS;
+                    } else {
+                        if (killer != victim) {
+                            message = victimsTeam.isBedDestroyed() ? Messages.PLAYER_DIE_CACTUS_SOURCE_FINAL : Messages.PLAYER_DIE_CACTUS_SOURCE;
+                        } else {
+                            message = victimsTeam.isBedDestroyed() ? Messages.PLAYER_DIE_CACTUS_FINAL : Messages.PLAYER_DIE_CACTUS;
+                        }
+                    }
+                    cause = victimsTeam.isBedDestroyed() ? PlayerKillEvent.PlayerKillCause.CONTACT_FINAL : PlayerKillEvent.PlayerKillCause.CONTACT;
+                }
+
+                // Lava
+                else if (damageEvent.getCause() == EntityDamageEvent.DamageCause.LAVA) {
+                    if (killer == null) {
+                        message = victimsTeam.isBedDestroyed() ? Messages.PLAYER_DIE_LAVA_FINAL : Messages.PLAYER_DIE_LAVA;
+                    } else {
+                        if (killer != victim) {
+                            message = victimsTeam.isBedDestroyed() ? Messages.PLAYER_DIE_LAVA_SOURCE_FINAL : Messages.PLAYER_DIE_LAVA_SOURCE;
+                        } else {
+                            message = victimsTeam.isBedDestroyed() ? Messages.PLAYER_DIE_LAVA_FINAL : Messages.PLAYER_DIE_LAVA;
+                        }
+                    }
+                    cause = victimsTeam.isBedDestroyed() ? PlayerKillEvent.PlayerKillCause.PLAYER_LAVA_FINAL : PlayerKillEvent.PlayerKillCause.PLAYER_LAVA;
+                }
+
+                // Fire - Fire_Tick
+                else if (damageEvent.getCause().equals(EntityDamageEvent.DamageCause.FIRE) || damageEvent.getCause().equals(EntityDamageEvent.DamageCause.FIRE_TICK)) {
+                    if (killer == null) {
+                        message = victimsTeam.isBedDestroyed() ? Messages.PLAYER_DIE_FIRE_FINAL : Messages.PLAYER_DIE_FIRE;
+                    } else {
+                        if (killer != victim) {
+                            message = victimsTeam.isBedDestroyed() ? Messages.PLAYER_DIE_FIRE_SOURCE_FINAL : Messages.PLAYER_DIE_FIRE_SOURCE;
+                        } else {
+                            message = victimsTeam.isBedDestroyed() ? Messages.PLAYER_DIE_FIRE_FINAL : Messages.PLAYER_DIE_FIRE;
+                        }
+                    }
+                    cause = victimsTeam.isBedDestroyed() ? PlayerKillEvent.PlayerKillCause.PLAYER_FIRE_FINAL : PlayerKillEvent.PlayerKillCause.PLAYER_FIRE;
+                }
+
             }
 
             if (killer != null) killersTeam = a.getTeam(killer);
@@ -646,7 +717,6 @@ public class DamageDeathMove implements Listener {
             } else {
                 if (a.getStatus() == GameState.playing) {
                     if (e.getPlayer().getLocation().getBlockY() <= a.getYKillHeight()) {
-
                         nms.voidKill(e.getPlayer());
                     }
                     for (ITeam t : a.getTeams()) {

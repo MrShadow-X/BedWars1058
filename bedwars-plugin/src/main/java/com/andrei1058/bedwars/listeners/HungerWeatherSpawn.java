@@ -27,6 +27,7 @@ import com.andrei1058.bedwars.api.server.ServerType;
 import com.andrei1058.bedwars.arena.Arena;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -113,11 +114,7 @@ public class HungerWeatherSpawn implements Listener {
         IArena a = Arena.getArenaByPlayer(e.getPlayer());
         if (a == null) return;
         /* remove empty bottle */
-        switch (e.getItem().getType()) {
-            case GLASS_BOTTLE:
-                nms.minusAmount(e.getPlayer(), e.getItem(), 1);
-                break;
-            case MILK_BUCKET:
+        if (e.getItem().getType().equals(Material.MILK_BUCKET)) {
                 e.setCancelled(true);
                 nms.minusAmount(e.getPlayer(), e.getItem(), 1);
                 int task = Bukkit.getScheduler().runTaskLater(plugin, () -> {
@@ -125,7 +122,6 @@ public class HungerWeatherSpawn implements Listener {
                     debug("PlayerItemConsumeEvent player " + e.getPlayer() + " was removed from magicMilk");
                 }, 20 * 30L).getTaskId();
                 Arena.magicMilk.put(e.getPlayer().getUniqueId(), task);
-                break;
         }
     }
 

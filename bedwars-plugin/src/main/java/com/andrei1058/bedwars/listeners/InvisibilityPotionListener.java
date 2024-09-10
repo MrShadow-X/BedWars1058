@@ -30,10 +30,16 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import static com.andrei1058.bedwars.BedWars.nms;
 import static com.andrei1058.bedwars.BedWars.plugin;
@@ -52,16 +58,29 @@ public class InvisibilityPotionListener implements Listener {
         );
     }
 
+    private final ConcurrentMap<Player, Boolean> hasEaten = new ConcurrentHashMap<>();
+
+    // prevent dropping bottle before removing it from inventory
+    @EventHandler
+    public void onDrop(PlayerDropItemEvent e) {
+        if (hasEaten.getOrDefault(e.getPlayer(), false)) {
+            if (e.getItemDrop().getItemStack().getType().equals(Material.GLASS_BOTTLE)) {
+                e.setCancelled(true);
+            }
+        }
+    }
+
     @EventHandler
     public void onDrink(PlayerItemConsumeEvent e) {
         IArena a = Arena.getArenaByPlayer(e.getPlayer());
         if (a == null) return;
         if (e.getItem().getType() != Material.POTION) return;
-        // remove potion bottle
-        Bukkit.getScheduler().runTaskLater(plugin, () ->
-                        nms.minusAmount(e.getPlayer(), new ItemStack(Material.GLASS_BOTTLE), 1),
-                5L);
-        //
+        hasEaten.put(e.getPlayer(), true);
+        // remove empty potion bottle
+        Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+            nms.minusAmount(e.getPlayer(), new ItemStack(Material.GLASS_BOTTLE), 1);
+            hasEaten.put(e.getPlayer(), false);
+        }, 2L);
 
         if (nms.isInvisibilityPotion(e.getItem())) {
             Bukkit.getScheduler().runTaskLater(plugin, () -> {

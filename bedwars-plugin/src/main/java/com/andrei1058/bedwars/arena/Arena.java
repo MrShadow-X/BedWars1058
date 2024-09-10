@@ -560,7 +560,11 @@ public class Arena implements IArena {
             return false;
         }
 
+        // Change player gamemode while waiting
+        p.setGameMode(GameMode.ADVENTURE);
+
         p.getInventory().setArmorContents(null);
+
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
             // bungee mode invisibility issues
             if (getServerType() == ServerType.BUNGEE) {
@@ -1147,10 +1151,22 @@ public class Arena implements IArena {
         p.closeInventory();
         players.add(p);
         for (Player on : players) {
-            on.sendMessage(getMsg(on, Messages.COMMAND_REJOIN_PLAYER_RECONNECTED).replace("{playername}", p.getName()).replace("{player}", p.getDisplayName()).replace("{on}", String.valueOf(getPlayers().size())).replace("{max}", String.valueOf(getMaxPlayers())));
+            on.sendMessage(getMsg(on, Messages.COMMAND_REJOIN_PLAYER_RECONNECTED)
+                    .replace("{vPrefix}", getChatSupport().getPrefix(p))
+                    .replace("{vSuffix}", getChatSupport().getSuffix(p))
+                    .replace("{playername}", p.getName())
+                    .replace("{player}", p.getDisplayName())
+                    .replace("{on}", String.valueOf(getPlayers().size()))
+                    .replace("{max}", String.valueOf(getMaxPlayers())));
         }
         for (Player on : spectators) {
-            on.sendMessage(getMsg(on, Messages.COMMAND_REJOIN_PLAYER_RECONNECTED).replace("{playername}", p.getName()).replace("{player}", p.getDisplayName()).replace("{on}", String.valueOf(getPlayers().size())).replace("{max}", String.valueOf(getMaxPlayers())));
+            on.sendMessage(getMsg(on, Messages.COMMAND_REJOIN_PLAYER_RECONNECTED)
+                    .replace("{vPrefix}", getChatSupport().getPrefix(p))
+                    .replace("{vSuffix}", getChatSupport().getSuffix(p))
+                    .replace("{playername}", p.getName())
+                    .replace("{player}", p.getDisplayName())
+                    .replace("{on}", String.valueOf(getPlayers().size()))
+                    .replace("{max}", String.valueOf(getMaxPlayers())));
         }
         setArenaByPlayer(p, this);
         /* save player inventory etc */

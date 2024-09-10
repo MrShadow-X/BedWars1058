@@ -106,6 +106,16 @@ public class PlayerKillEvent extends Event {
         IRON_GOLEM(false, true, false),
         IRON_GOLEM_FINAL_KILL(true, true, false),
         PLAYER_PUSH(false, false, false),
+        SUFFOCATION(false, false, false),
+        SUFFOCATION_FINAL(true, false, false),
+        DROWNING(false, false, false),
+        DROWNING_FINAL(true, false, false),
+        CONTACT(false, false, false),
+        CONTACT_FINAL(true, false, false),
+        PLAYER_LAVA(false, false, false),
+        PLAYER_LAVA_FINAL(true, false, false),
+        PLAYER_FIRE(false, false,false),
+        PLAYER_FIRE_FINAL(true, false,false),
         /**
          * Corresponds to FALL on ground.
          */

@@ -104,6 +104,14 @@ public class Interact implements Listener {
                 e.setCancelled(true);
             } else if (b.getType() == Material.ANVIL && config.getBoolean(ConfigPath.GENERAL_CONFIGURATION_DISABLE_ANVIL)) {
                 e.setCancelled(true);
+            } else if (b.getType().name().endsWith("_DOOR") && config.getBoolean(ConfigPath.GENERAL_CONFIGURATION_DISABLE_WOODEN_DOOR)) {
+                e.setCancelled(true);
+            } else if (b.getType().name().contains("TRAP") && config.getBoolean(ConfigPath.GENERAL_CONFIGURATION_DISABLE_TRAPDOOR)) {
+                e.setCancelled(true);
+            } else if (b.getType() == Material.NOTE_BLOCK && config.getBoolean(ConfigPath.GENERAL_CONFIGURATION_DISABLE_NOTEBLOCK)) {
+                e.setCancelled(true);
+            } else if (b.getType().name().endsWith("_FENCE_GATE") && config.getBoolean(ConfigPath.GENERAL_CONFIGURATION_DISABLE_WOODEN_FENCE_GATE)) {
+                e.setCancelled(true);
             }
         }
     }
@@ -169,6 +177,9 @@ public class Interact implements Listener {
                         case "WORKBENCH":
                         case "HOPPER":
                         case "TRAPPED_CHEST":
+                        case "TRAP_DOOR":
+                        case "WOOD_DOOR":
+                        case "NOTE_BLOCK":
                         case "CRAFTING_TABLE":
                             e.setCancelled(true);
                             break;
@@ -198,11 +209,20 @@ public class Interact implements Listener {
             IArena a = Arena.getArenaByPlayer(p);
             if (a != null) {
                 if (a.isPlayer(p)) {
+
+                    if (inHand.getType() == Material.ENDER_PEARL) {
+
+                        
+
+                    }
+
                     if (inHand.getType() == nms.materialFireball()) {
 
                         e.setCancelled(true);
+                        // Return if player has active cooldown
+                        if (p.hasCooldown(nms.materialFireball())) return;
 
-                        if(System.currentTimeMillis() - a.getFireballCooldowns().getOrDefault(p.getUniqueId(), 0L) > (fireballCooldown*1000)) {
+                        //if(System.currentTimeMillis() - a.getFireballCooldowns().getOrDefault(p.getUniqueId(), 0L) > (fireballCooldown*1000)) {
                             a.getFireballCooldowns().put(p.getUniqueId(), System.currentTimeMillis());
                             Fireball fb = p.launchProjectile(Fireball.class);
                             Vector direction = p.getEyeLocation().getDirection();
@@ -211,8 +231,13 @@ public class Interact implements Listener {
                             //fb.setIsIncendiary(false); // apparently this on <12 makes the fireball not explode on hit. wtf bukkit?
                             fb.setYield(fireballExplosionSize);
                             fb.setMetadata("bw1058", new FixedMetadataValue(plugin, "ceva"));
+
+                            // Add cooldown for Fireball (Fire Charge)
+                            p.setCooldown(nms.materialFireball(), BedWars.config.getYml().getInt(ConfigPath.GENERAL_CONFIGURATION_FIREBALL_COOLDOWN) * 20);
+
+
                             nms.minusAmount(p, inHand, 1);
-                        }
+                       // }
 
                     }
                 }

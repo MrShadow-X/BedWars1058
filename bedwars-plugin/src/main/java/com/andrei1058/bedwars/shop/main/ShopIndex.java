@@ -33,6 +33,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -117,6 +118,13 @@ public class ShopIndex {
             im.setDisplayName(Language.getMsg(player, separatorNamePath));
             im.setLore(Language.getList(player, separatorLorePath));
             i.setItemMeta(im);
+        }
+
+        List<Integer> separatorAdditionalSlots = Arrays.asList(9, 18, 27, 36, 44, 46, 47, 48, 49, 50, 51, 52, 53, 45, 35, 26, 17);
+        for (int slot : separatorAdditionalSlots) {
+            if (slot >= 0 && slot < inv.getSize()) {
+                inv.setItem(slot, i);
+            }
         }
 
         for (int x = 9; x < 18; x++) {

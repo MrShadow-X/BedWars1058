@@ -68,22 +68,21 @@ public class ArenaSelectorListener implements Listener {
         if (event.getClick() == ClickType.LEFT) {
             if ((status == GameState.waiting || status == GameState.starting) && arena.addPlayer(player, false)) {
                 Sounds.playSound("join-allowed", player);
+                player.closeInventory();
             } else {
                 Sounds.playSound("join-denied", player);
                 player.sendMessage(Language.getMsg(player, Messages.ARENA_JOIN_DENIED_SELECTOR));
+                player.closeInventory();
             }
         } else if (event.getClick() == ClickType.RIGHT) {
             if (status == GameState.playing && arena.addSpectator(player, false, null)) {
                 Sounds.playSound("spectate-allowed", player);
+                player.closeInventory();
             } else {
                 player.sendMessage(Language.getMsg(player, Messages.ARENA_SPECTATE_DENIED_SELECTOR));
                 Sounds.playSound("spectate-denied", player);
+                player.closeInventory();
             }
-        } else {
-            // Incorrect click
-            return;
         }
-
-        player.closeInventory();
     }
 }

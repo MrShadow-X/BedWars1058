@@ -63,6 +63,7 @@ public class SpecialsListener implements Listener {
                 if (i.getType() == Material.valueOf(BedWars.shop.getYml().getString(ConfigPath.SHOP_SPECIAL_SILVERFISH_MATERIAL))
                         && nms.itemStackDataCompare(i, (short) BedWars.shop.getYml().getInt(ConfigPath.SHOP_SPECIAL_SILVERFISH_DATA))) {
                     e.setCancelled(true);
+
                     ITeam playerTeam = a.getTeam(p);
                     PlayerBedBugSpawnEvent event = new PlayerBedBugSpawnEvent(p, playerTeam, a);
                     nms.spawnSilverfish(l.add(0, 1, 0), playerTeam, BedWars.shop.getYml().getDouble(ConfigPath.SHOP_SPECIAL_SILVERFISH_SPEED),
@@ -70,6 +71,10 @@ public class SpecialsListener implements Listener {
                             BedWars.shop.getYml().getDouble(ConfigPath.SHOP_SPECIAL_SILVERFISH_DAMAGE));
                     Bukkit.getPluginManager().callEvent(event);
                     if (!nms.isProjectile(i)) {
+
+                        // Add cooldown for Bed Bug (SilverFish) - [ Block Click ]
+                        p.setCooldown(i.getType(), BedWars.config.getYml().getInt(ConfigPath.GENERAL_CONFIGURATION_SILVERFISH_COOLDOWN) * 20);
+
                         nms.minusAmount(p, i, 1);
                         p.updateInventory();
                     }
@@ -81,12 +86,19 @@ public class SpecialsListener implements Listener {
                 if (i.getType() == Material.valueOf(BedWars.shop.getYml().getString(ConfigPath.SHOP_SPECIAL_IRON_GOLEM_MATERIAL))
                         && nms.itemStackDataCompare(i, (short) BedWars.shop.getYml().getInt(ConfigPath.SHOP_SPECIAL_IRON_GOLEM_DATA))) {
                     e.setCancelled(true);
+
+                    // Return if player has active cooldown
+                    if (p.hasCooldown(i.getType())) return;
                     ITeam playerTeam = a.getTeam(p);
                     PlayerDreamDefenderSpawnEvent event = new PlayerDreamDefenderSpawnEvent(p, playerTeam, a);
                     nms.spawnIronGolem(l.add(0, 1, 0), playerTeam, BedWars.shop.getYml().getDouble(ConfigPath.SHOP_SPECIAL_IRON_GOLEM_SPEED),
                             BedWars.shop.getYml().getDouble(ConfigPath.SHOP_SPECIAL_IRON_GOLEM_HEALTH), BedWars.shop.getInt(ConfigPath.SHOP_SPECIAL_IRON_GOLEM_DESPAWN));
                     Bukkit.getPluginManager().callEvent(event);
                     if (!nms.isProjectile(i)) {
+
+                        // Add cooldown for Dream Defender (Iron Golem)
+                        p.setCooldown(i.getType(), BedWars.config.getYml().getInt(ConfigPath.GENERAL_CONFIGURATION_IRON_GOLEM_COOLDOWN) * 20);
+
                         nms.minusAmount(p, i, 1);
                         p.updateInventory();
                     }

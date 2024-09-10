@@ -27,12 +27,15 @@ import com.andrei1058.bedwars.shop.ShopManager;
 import com.andrei1058.bedwars.shop.main.CategoryContent;
 import com.andrei1058.bedwars.shop.main.ShopCategory;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.HashMap;
-import java.util.Objects;
-import java.util.UUID;
+
+import java.util.*;
 
 public class QuickBuyAdd {
 
@@ -53,6 +56,20 @@ public class QuickBuyAdd {
         inv.setItem(4, cc.getItemStack(player, Objects.requireNonNull(sc)));
 
         Objects.requireNonNull(cache).addInInventory(inv, sc);
+
+        int invSize = inv.getSize();
+
+        for (int i = 0; i < invSize; i++) {
+            if (inv.getItem(i) == null) {
+                ItemStack separator = new ItemStack(Material.BLACK_STAINED_GLASS_PANE);
+                ItemMeta separatorMeta = separator.getItemMeta();
+                assert separatorMeta != null;
+                separatorMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&7"));
+                separator.setItemMeta(separatorMeta);
+                inv.setItem(i, separator);
+            }
+        }
+
 
         player.openInventory(inv);
         quickBuyAdds.put(player.getUniqueId(), cc);

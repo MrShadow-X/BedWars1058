@@ -347,6 +347,8 @@ public class Messages {
     public static String PLAYER_DIE_KNOCKED_IN_VOID_FINAL_KILL = "player-die-knocked-void-final";
     public static String PLAYER_DIE_KNOCKED_BY_REGULAR_KILL = "player-die-knocked-fall-regular";
     public static String PLAYER_DIE_KNOCKED_BY_FINAL_KILL = "player-die-knocked-fall-final";
+    public static String PLAYER_DIE_FALL = "player-die-fall";
+    public static String PLAYER_DIE_FALL_FINAL = "player-die-fall-final";
     public static String PLAYER_DIE_EXPLOSION_WITH_SOURCE_REGULAR_KILL = "player-die-bomb-regular";
     public static String PLAYER_DIE_EXPLOSION_WITH_SOURCE_FINAL_KILL = "player-die-bomb-final";
     public static String PLAYER_DIE_EXPLOSION_WITHOUT_SOURCE_REGULAR = "player-die-bomb2-regular";
@@ -363,6 +365,43 @@ public class Messages {
     public static String PLAYER_DIE_IRON_GOLEM_FINAL_KILL = "player-die-golem-final";
     public static String PLAYER_DIE_PVP_LOG_OUT_REGULAR = "player-die-pvp-log-out-regular";
     public static String PLAYER_DIE_PVP_LOG_OUT_FINAL = "player-die-pvp-log-out-final";
+
+    // Suffocated (With Source)
+    public static String PLAYER_DIE_SUFFOCATION_SOURCE = "player-die-suffocation";
+    public static String PLAYER_DIE_SUFFOCATION_SOURCE_FINAL = "player-die-suffocation-final";
+    // Suffocated (Without Source)
+    public static String PLAYER_DIE_SUFFOCATION = "player-die-suffocation2";
+    public static String PLAYER_DIE_SUFFOCATION_FINAL = "player-die-suffocation2-final";
+
+    // Drowning (With Source)
+    public static String PLAYER_DIE_DROWNING_SOURCE = "player-die-drowned";
+    public static String PLAYER_DIE_DROWNING_SOURCE_FINAL = "player-die-drowned-final";
+    // Drowning (Without Source)
+    public static String PLAYER_DIE_DROWNING = "player-die-drowned2";
+    public static String PLAYER_DIE_DROWNING_FINAL = "player-die-drowned2-final";
+
+    // Contact (With Source)
+    public static String PLAYER_DIE_CACTUS_SOURCE = "player-die-cactus";
+    public static String PLAYER_DIE_CACTUS_SOURCE_FINAL = "player-die-cactus-final";
+    // Contact (Without Source)
+    public static String PLAYER_DIE_CACTUS = "player-die-cactus2";
+    public static String PLAYER_DIE_CACTUS_FINAL = "player-die-cactus2-final";
+
+    // Lava (With Source)
+    public static String PLAYER_DIE_LAVA_SOURCE = "player-die-lava";
+    public static String PLAYER_DIE_LAVA_SOURCE_FINAL = "player-die-lava-final";
+    // Lava (Without Source)
+    public static String PLAYER_DIE_LAVA = "player-die-lava2";
+    public static String PLAYER_DIE_LAVA_FINAL = "player-die-lava2-final";
+
+    // Fire (With Source)
+    public static String PLAYER_DIE_FIRE_SOURCE = "player-die-fire";
+    public static String PLAYER_DIE_FIRE_SOURCE_FINAL = "player-die-fire-final";
+    // Fire (Without Source)
+    public static String PLAYER_DIE_FIRE = "player-die-fire2";
+    public static String PLAYER_DIE_FIRE_FINAL = "player-die-fire2-final";
+
+
 
     public static String PLAYER_DIE_REWARD_DIAMOND = "player-loot-diamond";
     public static String PLAYER_DIE_REWARD_IRON = "player-loot-iron";

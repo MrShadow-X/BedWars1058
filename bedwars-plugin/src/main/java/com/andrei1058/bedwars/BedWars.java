@@ -45,6 +45,7 @@ import com.andrei1058.bedwars.commands.leave.LeaveCommand;
 import com.andrei1058.bedwars.commands.party.PartyCommand;
 import com.andrei1058.bedwars.commands.rejoin.RejoinCommand;
 import com.andrei1058.bedwars.commands.shout.ShoutCommand;
+import com.andrei1058.bedwars.commands.start.StartCommand;
 import com.andrei1058.bedwars.configuration.*;
 import com.andrei1058.bedwars.database.Database;
 import com.andrei1058.bedwars.database.SQLite;
@@ -110,7 +111,8 @@ public class BedWars extends JavaPlugin {
 
     private static ServerType serverType = ServerType.MULTIARENA;
     public static boolean debug = true, autoscale = false;
-    public static String mainCmd = "bw", link = "https://www.spigotmc.org/resources/50942/";
+    public static String mainCmd = "bw", link = "https://www.google.com/";
+    public static String arenaCmd = "arena";
     public static ConfigManager signs, generators;
     public static MainConfig config;
     public static ShopManager shop;
@@ -227,6 +229,7 @@ public class BedWars extends JavaPlugin {
 
         /* Register commands */
         nms.registerCommand(mainCmd, new MainCommand(mainCmd));
+        nms.registerCommand(arenaCmd, new com.andrei1058.bedwars.commands.arena.MainCommand(arenaCmd));
 
         // newer versions do not seem to like delayed registration of commands
         if (nms.getVersion() >= 9) {
@@ -276,7 +279,7 @@ public class BedWars extends JavaPlugin {
                 new Inventory(), new Interact(), new RefreshGUI(), new HungerWeatherSpawn(), new CmdProcess(),
                 new FireballListener(), new EggBridge(), new SpectatorListeners(), new BaseListener(),
                 new TargetListener(), new LangListener(), new Warnings(this), new ChatAFK(),
-                new GameEndListener(), new DefaultStatsHandler()
+                new GameEndListener(), new DefaultStatsHandler(), new BlockColorChanger(), new AntiDropListener(), new ItemCooldowns()//, new BlockChangeName()
         );
 
         if (config.getBoolean(ConfigPath.GENERAL_CONFIGURATION_HEAL_POOL_ENABLE)) {
@@ -641,6 +644,9 @@ public class BedWars extends JavaPlugin {
     private void registerDelayedCommands() {
         if (!nms.isBukkitCommandRegistered("shout")) {
             nms.registerCommand("shout", new ShoutCommand("shout"));
+        }
+        if (!nms.isBukkitCommandRegistered("start")) {
+            nms.registerCommand("start", new StartCommand("start"));
         }
         nms.registerCommand("rejoin", new RejoinCommand("rejoin"));
         if (!(nms.isBukkitCommandRegistered("leave") && getServerType() == ServerType.BUNGEE)) {

@@ -24,10 +24,13 @@ import com.andrei1058.bedwars.BedWars;
 import org.bukkit.entity.Player;
 
 public class Permissions {
-    public static final String PERMISSION_FORCESTART = BedWars.mainCmd+".forcestart";
+    public static final String PERMISSION_FORCESTART = BedWars.mainCmd+".forceStart";
+    public static final String PERMISSION_START = BedWars.mainCmd+".start";
     public static final String PERMISSION_ALL = BedWars.mainCmd+".*";
     public static final String PERMISSION_COMMAND_BYPASS = BedWars.mainCmd+".cmd.bypass";
     public static final String PERMISSION_SHOUT_COMMAND = BedWars.mainCmd+".shout";
+
+    public static final String PERMISSION_ARENA_SETEVENT = BedWars.mainCmd+".arena.setEvent";
 
     public static final String PERMISSION_SETUP_ARENA = BedWars.mainCmd+".setup";
     public static final String PERMISSION_ARENA_GROUP = BedWars.mainCmd+".groups";

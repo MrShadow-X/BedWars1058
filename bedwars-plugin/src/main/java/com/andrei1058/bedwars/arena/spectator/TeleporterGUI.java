@@ -126,7 +126,14 @@ public class TeleporterGUI {
         List<String> lore = new ArrayList<>();
         String health = String.valueOf((int)targetPlayer.getHealth() * 100 / targetPlayer.getHealthScale());
         for (String s : getList(GUIholder, Messages.ARENA_SPECTATOR_TELEPORTER_GUI_HEAD_LORE)) {
-            lore.add(s.replace("{health}", health).replace("{food}", String.valueOf(targetPlayer.getFoodLevel())));
+            lore.add(s.replace("{health}", health)
+                    .replace("{vPrefix}", BedWars.getChatSupport().getPrefix(targetPlayer))
+                    .replace("{vSuffix}", BedWars.getChatSupport().getSuffix(targetPlayer))
+                    .replace("{team}", targetPlayerTeam.getDisplayName(Language.getPlayerLanguage(GUIholder)))
+                    .replace("{teamColor}", String.valueOf(targetPlayerTeam.getColor().chat()))
+                    .replace("{player}", targetPlayer.getDisplayName())
+                    .replace("{playername}", targetPlayer.getName())
+                    .replace("{food}", String.valueOf(targetPlayer.getFoodLevel())));
         }
         im.setLore(lore);
         i.setItemMeta(im);

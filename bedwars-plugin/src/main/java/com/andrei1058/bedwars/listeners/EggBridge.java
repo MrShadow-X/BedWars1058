@@ -22,13 +22,17 @@ package com.andrei1058.bedwars.listeners;
 
 import com.andrei1058.bedwars.BedWars;
 import com.andrei1058.bedwars.api.arena.IArena;
+import com.andrei1058.bedwars.api.configuration.ConfigPath;
 import com.andrei1058.bedwars.api.events.gameplay.EggBridgeThrowEvent;
 import com.andrei1058.bedwars.api.server.ServerType;
 import com.andrei1058.bedwars.arena.Arena;
 import com.andrei1058.bedwars.arena.tasks.EggBridgeTask;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.Egg;
+import org.bukkit.entity.EnderPearl;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Snowball;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.ProjectileHitEvent;
@@ -52,6 +56,22 @@ public class EggBridge implements Listener {
                 return;
             }
         }
+
+        // Add cooldown for Bed Bug (SilverFish) - [ Projectile ]
+
+        if (event.getEntity() instanceof Snowball) {
+            Snowball projectile = (Snowball) event.getEntity();
+            if (projectile.getShooter() instanceof Player) {
+                Player shooter = (Player) projectile.getShooter();
+                IArena arena = Arena.getArenaByPlayer(shooter);
+                if (arena != null) {
+                    if (arena.isPlayer(shooter)) {
+                        shooter.setCooldown(Material.SNOWBALL, BedWars.config.getYml().getInt(ConfigPath.GENERAL_CONFIGURATION_SILVERFISH_COOLDOWN) * 20);
+                    }
+                }
+            }
+        }
+
         if (event.getEntity() instanceof Egg) {
             Egg projectile = (Egg) event.getEntity();
             if (projectile.getShooter() instanceof Player) {
@@ -65,6 +85,11 @@ public class EggBridge implements Listener {
                             event.setCancelled(true);
                             return;
                         }
+
+                        // Add cooldown for Egg Bridge (Egg)
+                        Player p = (Player) projectile.getShooter();
+                        p.setCooldown(Material.EGG, BedWars.config.getYml().getInt(ConfigPath.GENERAL_CONFIGURATION_EGG_BRIDGE_COOLDOWN) * 20);
+
                         bridges.put(projectile, new EggBridgeTask(shooter, projectile, arena.getTeam(shooter).getColor()));
                     }
                 }

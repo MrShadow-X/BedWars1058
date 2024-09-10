@@ -127,6 +127,13 @@ public class ConfigPath {
     public static final String GENERAL_CONFIGURATION_DRAGON_SPAWN_COUNTDOWN = "countdowns.next-event-dragon-spawn";
     public static final String GENERAL_CONFIGURATION_GAME_END_COUNTDOWN = "countdowns.next-event-game-end";
 
+    public static final String GENERAL_CONFIGURATION_FIREBALL_COOLDOWN = "item-cooldowns.fireball";
+    public static final String GENERAL_CONFIGURATION_TNT_COOLDOWN = "item-cooldowns.tnt";
+    public static final String GENERAL_CONFIGURATION_SILVERFISH_COOLDOWN = "item-cooldowns.bed-bug";
+    public static final String GENERAL_CONFIGURATION_IRON_GOLEM_COOLDOWN = "item-cooldowns.dream-defender";
+    public static final String GENERAL_CONFIGURATION_EGG_BRIDGE_COOLDOWN = "item-cooldowns.egg-bridge";
+    public static final String GENERAL_CONFIGURATION_TOWER_COOLDOWN = "item-cooldowns.tower";
+
     public static final String GENERAL_CONFIGURATION_HUNGER_WAITING = "allow-hunger-depletion.waiting";
     public static final String GENERAL_CONFIGURATION_HUNGER_INGAME = "allow-hunger-depletion.ingame";
 
@@ -171,6 +178,10 @@ public class ConfigPath {
     public static final String GENERAL_CONFIGURATION_DISABLE_FURNACE = "inventories.disable-furnace";
     public static final String GENERAL_CONFIGURATION_DISABLE_BREWING_STAND = "inventories.disable-brewing-stand";
     public static final String GENERAL_CONFIGURATION_DISABLE_ANVIL = "inventories.disable-anvil";
+    public static final String GENERAL_CONFIGURATION_DISABLE_TRAPDOOR = "inventories.disable-trapdoor";
+    public static final String GENERAL_CONFIGURATION_DISABLE_NOTEBLOCK = "inventories.disable-noteblock";
+    public static final String GENERAL_CONFIGURATION_DISABLE_WOODEN_DOOR = "inventories.disable-wooden-door";
+    public static final String GENERAL_CONFIGURATION_DISABLE_WOODEN_FENCE_GATE = "inventories.disable-wooden-fence-gate";
     public static final String GENERAL_CONFIGURATION_MARK_LEAVE_AS_ABANDON = "mark-leave-as-abandon";
     public static final String GENERAL_CONFIGURATION_ENABLE_GEN_SPLIT = "enable-gen-split";
 

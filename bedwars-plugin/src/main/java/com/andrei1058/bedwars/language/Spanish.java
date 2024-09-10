@@ -54,6 +54,7 @@ public class Spanish extends Language {
         }
 
         yml.options().copyDefaults(true);
+
         yml.addDefault(Messages.COMMAND_MAIN, Arrays.asList("", "&2▪ &7/" + mainCmd + " stats", "&2▪ &7/" + mainCmd + " join &o<arena/grupo>", "&2▪ &7/" + mainCmd + " leave", "&2▪ &7/" + mainCmd + " lang", "&2▪ &7/" + mainCmd + " gui", "&2▪ &7/" + mainCmd + " start &3(vip)"));
         yml.addDefault(Messages.ARENA_JOIN_VIP_KICK, "{prefix}&cHas sido expulsado ya que un VIP se ha unido a la partida.\n&aConsidere hacer una donación para obtener más funciones. &7&o(click)");
         yml.addDefault(Messages.COMMAND_JOIN_DENIED_IS_FULL, "{prefix}&cEsta arena está llena!\n&aConsidere hacer una donación para obtener más funciones. &7&o(click)");
@@ -727,6 +728,44 @@ public class Spanish extends Language {
         yml.addDefault(Messages.PLAYER_DIE_DEBUG_FINAL_KILL, "{PlayerColor}{PlayerName} &7&7fue asesinado por la BedBug de {KillerColor}{KillerTeamName}&7. &b&lMUERTE FINAL!");
         yml.addDefault(Messages.PLAYER_DIE_IRON_GOLEM_REGULAR, "{PlayerColor}{PlayerName} &7fue asesinado por el Golem de {KillerColor}{KillerTeamName}&7.");
         yml.addDefault(Messages.PLAYER_DIE_IRON_GOLEM_FINAL_KILL, "{PlayerColor}{PlayerName} &7fue asesinado por el Golem de {KillerColor}{KillerTeamName}&7. &b&lMUERTE FINAL!");
+        yml.addDefault(Messages.PLAYER_DIE_FALL, "{PlayerColor}{PlayerName} fell from a high place&7&7!");
+        yml.addDefault(Messages.PLAYER_DIE_FALL_FINAL, "{PlayerColor}{PlayerName} fell from a high place&7&7! &b&lFINAL KILL!");
+        
+        // Suffocation (With Source)
+        yml.addDefault(Messages.PLAYER_DIE_SUFFOCATION_SOURCE, "{PlayerColor}{PlayerName} &7suffocated in wall because of {KillerColor}{KillerName}&7!");
+        yml.addDefault(Messages.PLAYER_DIE_SUFFOCATION_SOURCE_FINAL, "{PlayerColor}{PlayerName} &7suffocated in wall because of {KillerColor}{KillerName}&7! &b&lFINAL KILL!");
+        // Suffocation (Without Source)
+        yml.addDefault(Messages.PLAYER_DIE_SUFFOCATION, "{PlayerColor}{PlayerName} &7suffocated in wall&7!");
+        yml.addDefault(Messages.PLAYER_DIE_SUFFOCATION_FINAL, "{PlayerColor}{PlayerName} &7suffocated in wall&7! &b&lFINAL KILL!");
+
+        // Drowning (With Source)
+        yml.addDefault(Messages.PLAYER_DIE_DROWNING_SOURCE, "{PlayerColor}{PlayerName} &7drowned because of {KillerColor}{KillerName}&7!");
+        yml.addDefault(Messages.PLAYER_DIE_DROWNING_SOURCE_FINAL, "{PlayerColor}{PlayerName} &7drowned because of {KillerColor}{KillerName}&7! &b&lFINAL KILL!");
+        // Drowning (Without Source)
+        yml.addDefault(Messages.PLAYER_DIE_DROWNING, "{PlayerColor}{PlayerName} &7drowned&7!");
+        yml.addDefault(Messages.PLAYER_DIE_DROWNING_FINAL, "{PlayerColor}{PlayerName} &7drowned&7! &b&lFINAL KILL!");
+
+        // Contact (With Source)
+        yml.addDefault(Messages.PLAYER_DIE_CACTUS_SOURCE, "{PlayerColor}{PlayerName} &7was pricked to death because of {KillerColor}{KillerName}&7!");
+        yml.addDefault(Messages.PLAYER_DIE_CACTUS_SOURCE_FINAL, "{PlayerColor}{PlayerName} &7was pricked to death because of {KillerColor}{KillerName}&7! &b&lFINAL KILL!");
+        // Contact (Without Source)
+        yml.addDefault(Messages.PLAYER_DIE_CACTUS, "{PlayerColor}{PlayerName} &7was pricked to death&7!");
+        yml.addDefault(Messages.PLAYER_DIE_CACTUS_FINAL, "{PlayerColor}{PlayerName} &7was pricked to death&7! &b&lFINAL KILL!");
+
+        // Lava (With Source)
+        yml.addDefault(Messages.PLAYER_DIE_LAVA_SOURCE, "{PlayerColor}{PlayerName} &7tried to swim in lava to escape {KillerColor}{KillerName}&7!");
+        yml.addDefault(Messages.PLAYER_DIE_LAVA_SOURCE_FINAL, "{PlayerColor}{PlayerName} &7tried to swim in lava to escape {KillerColor}{KillerName}&7! &b&lFINAL KILL!");
+        // Lava (Without Source)
+        yml.addDefault(Messages.PLAYER_DIE_LAVA, "{PlayerColor}{PlayerName} &7tried to swim in lava&7!");
+        yml.addDefault(Messages.PLAYER_DIE_LAVA_FINAL, "{PlayerColor}{PlayerName} &7tried to swim in lava&7! &b&lFINAL KILL!");
+
+        // Fire\FireTick (With Source)
+        yml.addDefault(Messages.PLAYER_DIE_FIRE_SOURCE, "{PlayerColor}{PlayerName} &7was burned to a crisp while fighting {KillerColor}{KillerName}&7!");
+        yml.addDefault(Messages.PLAYER_DIE_FIRE_SOURCE_FINAL, "{PlayerColor}{PlayerName} &7was burned to a crisp while fighting {KillerColor}{KillerName}&7! &b&lFINAL KILL!");
+        // Fire\FireTick (Without Source)
+        yml.addDefault(Messages.PLAYER_DIE_FIRE, "{PlayerColor}{PlayerName} &7burned to death&7!");
+        yml.addDefault(Messages.PLAYER_DIE_FIRE_FINAL, "{PlayerColor}{PlayerName} &7burned to death&7! &b&lFINAL KILL!");
+
         yml.addDefault(Messages.PLAYER_DIE_REWARD_DIAMOND, "{prefix}&b+{amount} {meaning}");
         yml.addDefault(Messages.PLAYER_DIE_REWARD_EMERALD, "{prefix}&a+{amount} {meaning}");
         yml.addDefault(Messages.PLAYER_DIE_REWARD_IRON, "{prefix}&f+{amount} {meaning}");

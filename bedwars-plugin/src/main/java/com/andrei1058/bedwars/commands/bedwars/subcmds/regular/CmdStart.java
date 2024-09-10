@@ -27,6 +27,7 @@ import com.andrei1058.bedwars.api.arena.team.ITeam;
 import com.andrei1058.bedwars.api.command.ParentCommand;
 import com.andrei1058.bedwars.api.command.SubCommand;
 import com.andrei1058.bedwars.api.configuration.ConfigPath;
+import com.andrei1058.bedwars.api.language.Language;
 import com.andrei1058.bedwars.api.language.Messages;
 import com.andrei1058.bedwars.arena.Arena;
 import com.andrei1058.bedwars.arena.SetupSession;
@@ -40,6 +41,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 import static com.andrei1058.bedwars.BedWars.getChatSupport;
+import static com.andrei1058.bedwars.BedWars.nms;
 import static com.andrei1058.bedwars.api.language.Language.getMsg;
 
 public class CmdStart extends SubCommand {
@@ -48,8 +50,8 @@ public class CmdStart extends SubCommand {
         super(parent, name);
         setPriority(15);
         showInList(true);
-        setDisplayInfo(com.andrei1058.bedwars.commands.bedwars.MainCommand.createTC("§6 ▪ §7/"+ MainCommand.getInstance().getName()+" "+getSubCommandName()+" §8 - §eforce start an arena",
-                "/"+getParent().getName()+" "+getSubCommandName(), "§fForcestart an arena.\n§fPermission: §c"+Permissions.PERMISSION_FORCESTART));
+        setDisplayInfo(com.andrei1058.bedwars.commands.bedwars.MainCommand.createTC("§6 ▪ §7/" + MainCommand.getInstance().getName() + " " + getSubCommandName() + " §8 - §eforce start an arena",
+                "/" + getParent().getName() + " " + getSubCommandName(), "§fForcestart an arena.\n§fPermission: §c" + Permissions.PERMISSION_FORCESTART));
     }
 
     @Override
@@ -57,22 +59,22 @@ public class CmdStart extends SubCommand {
         if (s instanceof ConsoleCommandSender) return false;
         Player p = (Player) s;
         IArena a = Arena.getArenaByPlayer(p);
-        if (a == null){
+        if (a == null) {
             p.sendMessage(getMsg(p, Messages.COMMAND_FORCESTART_NOT_IN_GAME));
             return true;
         }
-        if (!a.isPlayer(p)){
+        if (!a.isPlayer(p)) {
             p.sendMessage(getMsg(p, Messages.COMMAND_FORCESTART_NOT_IN_GAME));
             return true;
         }
-        if (!(p.hasPermission(Permissions.PERMISSION_ALL) || p.hasPermission(Permissions.PERMISSION_FORCESTART))){
+        if (!(p.hasPermission(Permissions.PERMISSION_ALL) || p.hasPermission(Permissions.PERMISSION_FORCESTART))) {
             p.sendMessage(getMsg(p, Messages.COMMAND_FORCESTART_NO_PERM));
             return true;
         }
         if (a.getStatus() == GameState.playing) return true;
         if (a.getStatus() == GameState.restarting) return true;
-        if (a.getStartingTask() == null){
-            if (args.length == 1 && args[0].equalsIgnoreCase("debug") && s.isOp()){
+        if (a.getStartingTask() == null) {
+            if (args.length == 1 && args[0].equalsIgnoreCase("debug") && s.isOp()) {
                 a.changeStatus(GameState.starting);
                 BedWars.debug = true;
             } else {
@@ -82,12 +84,14 @@ public class CmdStart extends SubCommand {
         int startSeconds = BedWars.config.getInt(ConfigPath.GENERAL_CONFIGURATION_START_COUNTDOWN_SHORTENED);
         if (a.getStartingTask().getCountdown() < startSeconds) return true;
         a.getStartingTask().setCountdown(startSeconds);
-        p.sendMessage(getMsg(p, Messages.COMMAND_FORCESTART_SUCCESS)
-                .replace("{player}", p.getName())
-                .replace("{vPrefix}", getChatSupport().getPrefix(p))
-                .replace("{seconds}", Integer.toString(startSeconds)));
-        return true;
-    }
+        for (Player player : a.getPlayers()) {
+            p.sendMessage(getMsg(p, Messages.COMMAND_FORCESTART_SUCCESS)
+                    .replace("{player}", p.getName())
+                    .replace("{vPrefix}", getChatSupport().getPrefix(p))
+                    .replace("{seconds}", Integer.toString(startSeconds)));
+        }
+    return true;
+}
 
     @Override
     public List<String> getTabComplete() {
